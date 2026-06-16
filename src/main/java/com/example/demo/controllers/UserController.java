@@ -1,0 +1,66 @@
+package com.example.demo.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.JwtTokenUtil;
+import com.example.demo.models.LoginDto;
+import com.example.demo.models.Token;
+import com.example.demo.models.User;
+import com.example.demo.models.UserDto;
+import com.example.demo.services.UserService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/users")
+
+public class UserController {
+	
+	@Autowired
+	private UserService service;
+
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	@PostMapping("/register")
+	public ResponseEntity<?> registerUser(@RequestBody @Valid UserDto dto) {
+//		System.out.println("received dto is valid");
+		// send dto to service
+		User dbUser = service.addUser(dto);
+		return new ResponseEntity<>(dbUser, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<?> authenticateUser(@RequestBody LoginDto user) {
+		try {
+			Authentication authentication = authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(
+							user.getEmail(), user.getPassword()));
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			User authUser = (User) authentication.getPrincipal();
+			Token t = new Token();
+			t.jwtToken = jwtTokenUtil.generateToken(authUser);
+			return new ResponseEntity<>(t,HttpStatus.OK);
+		}
+		catch(BadCredentialsException e) {
+			return new ResponseEntity<>("Error logging in !!",HttpStatus.UNAUTHORIZED);
+		}
+	}
+	
+	
+}
