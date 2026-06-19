@@ -1,9 +1,5 @@
 package com.example.demo.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,57 +8,40 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Cart {
+public class OrderDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private int quantity =1;
-	
-	@JsonProperty(access = Access.WRITE_ONLY)
 	@ManyToOne
 	@JoinColumn
-	private User user;
-	
-	@JsonProperty(access = Access.WRITE_ONLY)
+	private Orders orders;
 	@ManyToOne
 	@JoinColumn
 	private Product product;
-
+	private int quantity;
+	
 	public int getId() {
 		return id;
 	}
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
-	public int getQuantity() {
-		return quantity;
+	public Orders getOrders() {
+		return orders;
 	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+	public void setOrders(Orders orders) {
+		this.orders = orders;
 	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	public Product getProduct() {
 		return product;
 	}
-
 	public void setProduct(Product product) {
 		this.product = product;
 	}
-	
-	public int getTotalPrice() {
-		return this.product.getPrice()*this.quantity;
+	public int getQuantity() {
+		return quantity;
 	}
-	
-	
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 }

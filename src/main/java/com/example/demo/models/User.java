@@ -45,7 +45,19 @@ public class User implements UserDetails {
 	
 	@OneToMany(mappedBy = "user")
 	private List<Cart> myCart;
-		
+	
+	@OneToMany(mappedBy = "user")
+	private List<Orders> myOrders;
+	
+	public List<Orders> getMyOrders() {
+		return myOrders;
+	}
+	public void setMyOrders(List<Orders> myOrders) {
+		this.myOrders = myOrders;
+	}
+	public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+		this.authorities = authorities;
+	}
 	public List<Cart> getMyCart() {
 		return myCart;
 	}
