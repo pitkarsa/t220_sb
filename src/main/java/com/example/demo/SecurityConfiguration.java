@@ -64,6 +64,7 @@ public class SecurityConfiguration {
 			auth.requestMatchers(HttpMethod.GET, "/carts").hasRole("USER");
 			auth.requestMatchers(HttpMethod.PUT, "/carts/**").hasRole("USER");
 			auth.requestMatchers(HttpMethod.DELETE, "/carts/**").hasRole("USER");
+			
 			auth.anyRequest().permitAll();
 			
 		});

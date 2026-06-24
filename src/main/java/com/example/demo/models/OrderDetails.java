@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,8 +16,8 @@ public class OrderDetails {
 	@ManyToOne
 	@JoinColumn
 	private Orders orders;
-	@ManyToOne
-	@JoinColumn
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn	
 	private Product product;
 	private int quantity;
 	

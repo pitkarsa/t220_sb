@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,9 +24,19 @@ public class Product {
 	private int price;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "product")
-	private List<Cart> cartList;	
-		
+	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+	private List<Cart> cartList;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+	private List<OrderDetails> details;	
+	
+	public List<OrderDetails> getDetails() {
+		return details;
+	}
+	public void setDetails(List<OrderDetails> details) {
+		this.details = details;
+	}
 	public List<Cart> getCartList() {
 		return cartList;
 	}
